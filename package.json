@@ -1,0 +1,14 @@
+{
+  "name": "shelving",
+  "version": "1.0.0",
+  "description": "Shelving - Three.js Demo 3D Application\r ========================",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^4.6.1"
+  }
+}
