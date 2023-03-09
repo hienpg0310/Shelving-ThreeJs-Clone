@@ -477,30 +477,30 @@ App.prototype = {
         gui.domElement.hidden = true;
         
         // viewMode
-        var folder = gui.addFolder('View');
-        var controller = folder.add(this.options, 'viewMode', {Basic: App.ViewModeBasic, Environment: App.ViewModeEnv}).name('Mode');
-        controller.onChange(function(viewMode) {
-            self.setViewMode(viewMode);
-        });
-        folder.open();
+        // var folder = gui.addFolder('View');
+        // var controller = folder.add(this.options, 'viewMode', {Basic: App.ViewModeBasic, Environment: App.ViewModeEnv}).name('Mode');
+        // controller.onChange(function(viewMode) {
+        //     self.setViewMode(viewMode);
+        // });
+        // folder.open();
 
         // room size
-        folder = gui.addFolder('Room Size');
+        // folder = gui.addFolder('Room Size');
         // room height
-        controller = folder.add(this.options.room, 'height', this.roomSizeMin, this.roomHeightMax, this.roomSizeStep).name('Height');
-        controller.onChange(function(height, e) {
-            self.setRoomSize(self.options.room.width, self.options.room.length, height);
-        });
+        // controller = folder.add(this.options.room, 'height', this.roomSizeMin, this.roomHeightMax, this.roomSizeStep).name('Height');
+        // controller.onChange(function(height, e) {
+        //     self.setRoomSize(self.options.room.width, self.options.room.length, height);
+        // });
         // room width
-        controller = folder.add(this.options.room, 'width', this.roomSizeMin, this.roomWidthMax, this.roomSizeStep).name('Width');
-        controller.onChange(function(width) {
-            self.setRoomSize(width, self.options.room.length, self.options.room.height);
-        });
+        // controller = folder.add(this.options.room, 'width', this.roomSizeMin, this.roomWidthMax, this.roomSizeStep).name('Width');
+        // controller.onChange(function(width) {
+        //     self.setRoomSize(width, self.options.room.length, self.options.room.height);
+        // });
         // room length
-        controller = folder.add(this.options.room, 'length', this.roomSizeMin, this.roomLengthMax, this.roomSizeStep).name('Length');
-        controller.onChange(function(length) {
-            self.setRoomSize(self.options.room.width, length, self.options.room.height);
-        });
+        // controller = folder.add(this.options.room, 'length', this.roomSizeMin, this.roomLengthMax, this.roomSizeStep).name('Length');
+        // controller.onChange(function(length) {
+        //     self.setRoomSize(self.options.room.width, length, self.options.room.height);
+        // });
 
         // shelving
         folder = gui.addFolder('Shelving');
@@ -602,13 +602,13 @@ App.prototype = {
             self.updateShelving();
         });
         
-        folder = gui.addFolder('Result (m3, $)');
-        controller = folder.add(this.output, 'shelvingQuantity').name('Shelving Quantity').listen();
-        controller = folder.add(this.output, 'pillarsQuantity').name('Pillars Quantity').listen();
-        controller = folder.add(this.output, 'quantity').name('Total Quantity').listen();
-        controller = folder.add(this.output, 'shelvingPrice').name('Shelving Price').listen();
-        controller = folder.add(this.output, 'pillarsPrice').name('Pillars Price').listen();
-        controller = folder.add(this.output, 'price').name('Total Price').listen();
+        // folder = gui.addFolder('Result (m3, $)');
+        // controller = folder.add(this.output, 'shelvingQuantity').name('Shelving Quantity').listen();
+        // controller = folder.add(this.output, 'pillarsQuantity').name('Pillars Quantity').listen();
+        // controller = folder.add(this.output, 'quantity').name('Total Quantity').listen();
+        // controller = folder.add(this.output, 'shelvingPrice').name('Shelving Price').listen();
+        // controller = folder.add(this.output, 'pillarsPrice').name('Pillars Price').listen();
+        // controller = folder.add(this.output, 'price').name('Total Price').listen();
         
         folder.open();
         
@@ -650,20 +650,20 @@ App.prototype = {
         this.options.room.height = height;
         
         // update wall
-        this.wall.scale.x = this.options.room.length / this.roomSizeMin;
-        this.wall.scale.y = this.options.room.height / this.roomSizeMin;
-        this.wall.position.y = this.options.room.height / 2;
-        this.wall.position.z = -this.options.room.width / 2;
-        this.wall.material.needsUpdate = true;
-        this.wall.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.wallTextureRepeatXPerStep;
-        this.wall.material.map.repeat.y = this.options.room.height / this.roomSizeTextureStep * this.wallTextureRepeatYPerStep;
+        // this.wall.scale.x = this.options.room.length / this.roomSizeMin;
+        // this.wall.scale.y = this.options.room.height / this.roomSizeMin;
+        // this.wall.position.y = this.options.room.height / 2;
+        // this.wall.position.z = -this.options.room.width / 2;
+        // this.wall.material.needsUpdate = true;
+        // this.wall.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.wallTextureRepeatXPerStep;
+        // this.wall.material.map.repeat.y = this.options.room.height / this.roomSizeTextureStep * this.wallTextureRepeatYPerStep;
         
         // update floor
-        this.floor.scale.x = this.options.room.length / this.roomSizeMin;
-        this.floor.scale.y = this.options.room.width / this.roomSizeMin;
-        this.floor.material.needsUpdate = true;
-        this.floor.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.floorTextureRepeatXPerStep;
-        this.floor.material.map.repeat.y = this.options.room.width / this.roomSizeTextureStep * this.floorTextureRepeatYPerStep;
+        // this.floor.scale.x = this.options.room.length / this.roomSizeMin;
+        // this.floor.scale.y = this.options.room.width / this.roomSizeMin;
+        // this.floor.material.needsUpdate = true;
+        // this.floor.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.floorTextureRepeatXPerStep;
+        // this.floor.material.map.repeat.y = this.options.room.width / this.roomSizeTextureStep * this.floorTextureRepeatYPerStep;
 
         // update shelving
         if (this.options.viewMode == App.ViewModeEnv) {
