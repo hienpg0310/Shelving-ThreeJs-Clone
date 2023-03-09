@@ -65,7 +65,7 @@ App.ViewModeBasic = 0;
 App.ViewModeEnv = 1;
 
 App.prototype = {
-    showFps: true,
+    showFps: false,
     showWorldAxis: true,
     antialias: true,
     fov: 45,
@@ -240,7 +240,7 @@ App.prototype = {
             canvas: this.canvas
         });
         this.engine.setSize(window.innerWidth, window.innerHeight, true);
-        this.engine.setClearColor(0x000000);
+        this.engine.setClearColor(0x393b3b);
         
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, this.sceneSize);
         this.camera.position.set(
@@ -397,44 +397,44 @@ App.prototype = {
             var params = this.objectsOptions[name];
             object.visible = isVisible;
             
-            if (name === 'YosemiteFrame') {
-                object.position.z = this.wall.position.z + params.offset[2];
-                object.position.y = params.offset[1];
-                object.position.x = -this.options.room.length / 2 + params.offset[0];
-            }
-            if (name === 'ficus') {
-                object.position.z = params.offset[2];
-                object.position.x = -this.options.room.length / 2 + params.offset[0];
-            }            
-            if (name === 'hangingLight') {
-                object.position.y = this.options.room.height + params.offset[1];
-            }
-            if (name === 'simple_sofa') {
-                object.position.z = this.options.room.width / 2 + params.offset[2];
-            }
-            if (name === 'wall-flat-tv') {
-                object.position.y = params.offset[1];
-                object.position.x = this.options.room.length / 2 + params.offset[2];
+            // if (name === 'YosemiteFrame') {
+            //     object.position.z = this.wall.position.z + params.offset[2];
+            //     object.position.y = params.offset[1];
+            //     object.position.x = -this.options.room.length / 2 + params.offset[0];
+            // }
+            // if (name === 'ficus') {
+            //     object.position.z = params.offset[2];
+            //     object.position.x = -this.options.room.length / 2 + params.offset[0];
+            // }            
+            // if (name === 'hangingLight') {
+            //     object.position.y = this.options.room.height + params.offset[1];
+            // }
+            // if (name === 'simple_sofa') {
+            //     object.position.z = this.options.room.width / 2 + params.offset[2];
+            // }
+            // if (name === 'wall-flat-tv') {
+            //     object.position.y = params.offset[1];
+            //     object.position.x = this.options.room.length / 2 + params.offset[2];
         
-                if (isVisible) {
-                    this.models['wall-flat-tv'].children[1].material.map.image.play();
-                } else {
-                    this.models['wall-flat-tv'].children[1].material.map.image.pause();
-                    this.models['wall-flat-tv'].children[1].material.map.image.currentTime = 0;
-                }
-            }
-            if (name === 'livreJava') {
-                object.position.y = this.options.distanceFromFloor + this.options.shelf.thickness + params.offset[1];
-                object.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2 + params.offset[2];
-                if (this.options.sectionsNum % 2) {
-                    object.position.x = this.options.shelf.length;
-                } else {
-                    object.position.x = this.options.shelf.length / 2;
-                }
-                if (this.options.sectionsNum === 1) {
-                    object.position.x = 0;
-                }
-            }
+            //     if (isVisible) {
+            //         this.models['wall-flat-tv'].children[1].material.map.image.play();
+            //     } else {
+            //         this.models['wall-flat-tv'].children[1].material.map.image.pause();
+            //         this.models['wall-flat-tv'].children[1].material.map.image.currentTime = 0;
+            //     }
+            // }
+            // if (name === 'livreJava') {
+            //     object.position.y = this.options.distanceFromFloor + this.options.shelf.thickness + params.offset[1];
+            //     object.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2 + params.offset[2];
+            //     if (this.options.sectionsNum % 2) {
+            //         object.position.x = this.options.shelf.length;
+            //     } else {
+            //         object.position.x = this.options.shelf.length / 2;
+            //     }
+            //     if (this.options.sectionsNum === 1) {
+            //         object.position.x = 0;
+            //     }
+            // }
             
             if (name === 'sitFemale03') {
                 object.position.x = params.offset[0];
@@ -712,7 +712,7 @@ App.prototype = {
         var axisHelper = new THREE.AxisHelper(6000);
         this.axis  = axisHelper;
         this.axis.visible = false;
-        this.scene.add(axisHelper);
+        // this.scene.add(axisHelper);
     },
     run: function() {
         var self = this;
