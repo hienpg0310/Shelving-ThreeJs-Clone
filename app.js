@@ -177,11 +177,11 @@ App.prototype = {
         }
     ],
     options: {
-        viewMode: App.ViewModeBasic,
+        viewMode: App.ViewModeEnv,
         room: {
             height: 2400,
-            length: 6000,
-            width: 3000
+            length: 4000,
+            width: 2000
         },
         floor: {
             color: '#ffffff',
@@ -192,36 +192,36 @@ App.prototype = {
             texture: 'white_with_stars_wallpaper.png'
         },
         
-        shelvesNum: 3,
-        sectionsNum: 2,
-        distanceFromFloor: 400,
-        distanceFromTop: 200,
+        shelvesNum: 5,
+        sectionsNum: 3,
+        distanceFromFloor: 0,
+        distanceFromTop: 0,
         distanceBetweenShelves: 550,
         
         pillar: {
             thickness: 30,
-            height: 1500,
+            height: 1800,
             color: '#ffffff',
             texture: 2 // an index in this.textures array
         },
         shelf: {
             length: 700,
-            width: 300,
+            width: 400,
             thickness: 30,
             color: '#ffffff',
-            texture: 4 // an index in this.textures array
+            texture: 2 // an index in this.textures array
         }
     },
-    objectsOptions: {
-        YosemiteFrame: {path: 'YosemiteFrame/', scale: [10, 10, 10], offset: [1000, 1700, 20], rotation: [0, 0, 0]},
-        ficus: {path: 'ficus/', scale: [20, 20, 20], offset: [200, 0, -250], rotation: [0, 0, 0]},
-        hangingLight: {path: 'hangingLight/', scale: [5, 5, 5], offset: [0, -1330, 0], rotation: [0, 0, 0]},
-        simple_sofa: {path: 'simple_sofa/', scale: [800, 800, 800], offset: [0, 0, -350], rotation: [0, Math.PI, 0]},
-        'wall-flat-tv': {path: 'wall-flat-tv/', scale: [10, 10, 10], offset: [0, 1400, -70], rotation: [0, -Utils.PI_HALF, 0]},
-        'livreJava': {path: 'livreJava/', scale: [12, 12, 12], offset: [0, 20, 70], rotation: [0, -Math.PI / 10, 0]},
+    // objectsOptions: {
+    //     YosemiteFrame: {path: 'YosemiteFrame/', scale: [10, 10, 10], offset: [1000, 1700, 20], rotation: [0, 0, 0]},
+    //     ficus: {path: 'ficus/', scale: [20, 20, 20], offset: [200, 0, -250], rotation: [0, 0, 0]},
+    //     hangingLight: {path: 'hangingLight/', scale: [5, 5, 5], offset: [0, -1330, 0], rotation: [0, 0, 0]},
+    //     simple_sofa: {path: 'simple_sofa/', scale: [800, 800, 800], offset: [0, 0, -350], rotation: [0, Math.PI, 0]},
+    //     'wall-flat-tv': {path: 'wall-flat-tv/', scale: [10, 10, 10], offset: [0, 1400, -70], rotation: [0, -Utils.PI_HALF, 0]},
+    //     'livreJava': {path: 'livreJava/', scale: [12, 12, 12], offset: [0, 20, 70], rotation: [0, -Math.PI / 10, 0]},
         
-        'sitFemale03': {path: 'sitFemale03/', scale: [9, 9, 9], offset: [-200, 0, -500], rotation: [0, Math.PI - Math.PI / 4, 0]}
-    },
+    //     'sitFemale03': {path: 'sitFemale03/', scale: [9, 9, 9], offset: [-200, 0, -500], rotation: [0, Math.PI - Math.PI / 4, 0]}
+    // },
     init: function(canvasId) {
         var self = this;
         this.notifier = new Notifier(document.getElementById('notification'));
@@ -240,7 +240,7 @@ App.prototype = {
             canvas: this.canvas
         });
         this.engine.setSize(window.innerWidth, window.innerHeight, true);
-        this.engine.setClearColor(0x393b3b);
+        this.engine.setClearColor(0x0000);
         
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, this.sceneSize);
         this.camera.position.set(
@@ -436,11 +436,11 @@ App.prototype = {
             //     }
             // }
             
-            if (name === 'sitFemale03') {
-                object.position.x = params.offset[0];
-                object.position.y = 0;
-                object.position.z = this.options.room.width / 2 + params.offset[2];
-            }
+            // if (name === 'sitFemale03') {
+            //     object.position.x = params.offset[0];
+            //     object.position.y = 0;
+            //     object.position.z = this.options.room.width / 2 + params.offset[2];
+            // }
         }
     },
     loadTextures: function() {
@@ -454,6 +454,7 @@ App.prototype = {
     onAssetsLoaded: function() {
         this.changePillarTexture();
         this.changeShelfTexture();
+
         // show controls
         this.gui.domElement.hidden = false;
         this.placeModels();
@@ -548,16 +549,16 @@ App.prototype = {
             self.updateShelving();
         });
         
-        controller = folder.add(
-            this.options, 
-            'distanceFromTop', 
-            this.distanceFromTopMin, 
-            this.distanceFromTopMax, 
-            this.distanceFromTopStep
-        ).name('Distance From Top');
-        controller.onChange(function() {
-            self.updateShelving();
-        });
+        // controller = folder.add(
+        //     this.options, 
+        //     'distanceFromTop', 
+        //     this.distanceFromTopMin, 
+        //     this.distanceFromTopMax, 
+        //     this.distanceFromTopStep
+        // ).name('Distance From Top');
+        // controller.onChange(function() {
+        //     self.updateShelving();
+        // });
 
         // pillar
         controller = folder.add(
