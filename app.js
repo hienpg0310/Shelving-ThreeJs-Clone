@@ -71,7 +71,7 @@ App.prototype = {
     fov: 45,
     sceneSize: 100000,
     
-    cameraInitialPosition: [-2173, 3130, -3388],
+    // cameraInitialPosition: [-2173, 3130, -3388],
 
     assetsPath: 'assets/',
     
@@ -179,17 +179,17 @@ App.prototype = {
     options: {
         viewMode: App.ViewModeEnv,
         room: {
-            height: 2400,
-            length: 4000,
-            width: 2000
+            height: 50000,
+            length: 40000,
+            width: 10000
         },
         floor: {
             color: '#ffffff',
-            texture: 'floor-carpeting.jpg'
+            texture: 'pfleiderer-grau.webp'
         },        
         wall: {
             color: '#ffffff',
-            texture: 'white_with_stars_wallpaper.png'
+            texture: 'pfleiderer-weissgrau.webp'
         },
         
         shelvesNum: 5,
@@ -244,8 +244,8 @@ App.prototype = {
         
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, this.sceneSize);
         this.camera.position.set(
-            this.cameraInitialPosition[0], this.cameraInitialPosition[1], -this.cameraInitialPosition[2]
-        );
+            0, 0, 1000
+        )
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         
         var light = new THREE.PointLight(0xffffff, 2);
@@ -258,11 +258,11 @@ App.prototype = {
         var controls = new THREE.OrbitControls(this.camera, this.canvas);
         controls.enablePan = false;
         controls.maxPolarAngle = 85 * Utils.PI_180;
-        controls.target.set(0, 0, 0);
-        controls.zoomSpeed = 1.0;
+        controls.target.set(0, 0, 10);
+        controls.zoomSpeed = 2.0;
         controls.rotateSpeed = 1.0;
-        controls.minDistance = 100;
-        controls.maxDistance = 50000;
+        controls.minDistance = 500;
+        controls.maxDistance = 20000;
         
         this.controls = controls;
         
@@ -341,60 +341,60 @@ App.prototype = {
         }
 
     },
-    onLoadModel: function(name, object, params) {
-        object.name = name;
-        object.visible = false;
-        object.scale.set(params.scale[0], params.scale[0], params.scale[0]);
-        object.position.set(params.offset[0], params.offset[1], params.offset[2]);
-        object.rotation.set(params.rotation[0], params.rotation[1], params.rotation[2]);
+    // onLoadModel: function(name, object, params) {
+    //     object.name = name;
+    //     object.visible = false;
+    //     object.scale.set(params.scale[0], params.scale[0], params.scale[0]);
+    //     object.position.set(params.offset[0], params.offset[1], params.offset[2]);
+    //     object.rotation.set(params.rotation[0], params.rotation[1], params.rotation[2]);
         
-        if (name === 'YosemiteFrame' || name === 'ficus') {
-            object.children.forEach(function(obj) {
-                obj.material.needsUpdate = true;
-                obj.material.shininess = 12;
-            });
-        }
-        if (name === 'simple_sofa') {
-            object.children.forEach(function(obj) {
-                obj.geometry.translate(0, 0, 0.25);
-            });
-        }
-        if (name === 'wall-flat-tv') {
-            object.children[1].material.needsUpdate = true;
-            object.children[2].material.needsUpdate = true;
+    //     // if (name === 'YosemiteFrame' || name === 'ficus') {
+    //     //     object.children.forEach(function(obj) {
+    //     //         obj.material.needsUpdate = true;
+    //     //         obj.material.shininess = 12;
+    //     //     });
+    //     // }
+    //     // if (name === 'simple_sofa') {
+    //     //     object.children.forEach(function(obj) {
+    //     //         obj.geometry.translate(0, 0, 0.25);
+    //     //     });
+    //     // }
+    //     // if (name === 'wall-flat-tv') {
+    //     //     object.children[1].material.needsUpdate = true;
+    //     //     object.children[2].material.needsUpdate = true;
             
-            object.children[1].material.color.setRGB(1,1,1);
-            object.children[1].material.shininess = 0;
+    //     //     object.children[1].material.color.setRGB(1,1,1);
+    //     //     object.children[1].material.shininess = 0;
             
-            object.children[2].material.materials[0].color.setRGB(1, 1, 0);
-            object.children[2].material.materials[0].emissiveIntensity = 10;
-            object.children[2].material.materials[0].shininess = 0;
-            object.children[2].material.materials[0].emissive.setRGB(0.06, 0.06, 0.06);
+    //     //     object.children[2].material.materials[0].color.setRGB(1, 1, 0);
+    //     //     object.children[2].material.materials[0].emissiveIntensity = 10;
+    //     //     object.children[2].material.materials[0].shininess = 0;
+    //     //     object.children[2].material.materials[0].emissive.setRGB(0.06, 0.06, 0.06);
             
-            object.children[2].material.materials[1].color.setRGB(1, 1, 0);
-            object.children[2].material.materials[1].emissiveIntensity = 10;
-            object.children[2].material.materials[1].shininess = 0;
-            object.children[2].material.materials[1].emissive.setRGB(0, 0.5, 1);
+    //     //     object.children[2].material.materials[1].color.setRGB(1, 1, 0);
+    //     //     object.children[2].material.materials[1].emissiveIntensity = 10;
+    //     //     object.children[2].material.materials[1].shininess = 0;
+    //     //     object.children[2].material.materials[1].emissive.setRGB(0, 0.5, 1);
             
-            var texture = new THREE.VideoTexture(document.getElementById('video'));
-            texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;
-            object.children[1].material.map = texture;
-        }
-        if (name === 'sitFemale03') {
-            object.children[0].material.materials.forEach(function(material) {
-                material.needsUpdate = true;
-                material.shininess = 0;
-            });
-        }                
-        this.models[name] = object;
-        this.scene.add(object);
-    },
+    //     //     var texture = new THREE.VideoTexture(document.getElementById('video'));
+    //     //     texture.minFilter = THREE.LinearFilter;
+    //     //     texture.magFilter = THREE.LinearFilter;
+    //     //     object.children[1].material.map = texture;
+    //     // }
+    //     // if (name === 'sitFemale03') {
+    //     //     object.children[0].material.materials.forEach(function(material) {
+    //     //         material.needsUpdate = true;
+    //     //         material.shininess = 0;
+    //     //     });
+    //     // }                
+    //     // this.models[name] = object;
+    //     // this.scene.add(object);
+    // },
     placeModels: function() {
         var isVisible = (this.options.viewMode == App.ViewModeEnv) && (this.options.room.length >= 3000);
         for (var name in this.models) {
             var object = this.models[name];
-            var params = this.objectsOptions[name];
+            // var params = this.objectsOptions[name];
             object.visible = isVisible;
             
             // if (name === 'YosemiteFrame') {
@@ -485,19 +485,19 @@ App.prototype = {
         // });
         // folder.open();
 
-        // room size
+        // // room size
         // folder = gui.addFolder('Room Size');
-        // room height
+        // // room height
         // controller = folder.add(this.options.room, 'height', this.roomSizeMin, this.roomHeightMax, this.roomSizeStep).name('Height');
         // controller.onChange(function(height, e) {
         //     self.setRoomSize(self.options.room.width, self.options.room.length, height);
         // });
-        // room width
+        // // room width
         // controller = folder.add(this.options.room, 'width', this.roomSizeMin, this.roomWidthMax, this.roomSizeStep).name('Width');
         // controller.onChange(function(width) {
         //     self.setRoomSize(width, self.options.room.length, self.options.room.height);
         // });
-        // room length
+        // // room length
         // controller = folder.add(this.options.room, 'length', this.roomSizeMin, this.roomLengthMax, this.roomSizeStep).name('Length');
         // controller.onChange(function(length) {
         //     self.setRoomSize(self.options.room.width, length, self.options.room.height);
@@ -686,6 +686,7 @@ App.prototype = {
         var isModelsVisible = isViewEnvMode && (this.options.room.length >= 3000);        
         
         if (isViewEnvMode) {
+            // this.shelving.position.y = 20;
             this.shelving.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2;
         } else {
             this.shelving.position.z = 0;
@@ -892,6 +893,7 @@ App.prototype = {
         var floor = new THREE.Mesh(geometry, material);
         floor.scale.x = this.options.room.length / this.roomSizeMin;
         floor.scale.y = this.options.room.width / this.roomSizeMin;
+        // floor.scale.z = this.options.room.height / this.roomSizeMin;
 
         floor.rotation.x = -Utils.PI_HALF;
         
