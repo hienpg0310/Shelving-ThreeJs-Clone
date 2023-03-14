@@ -35,6 +35,7 @@ var Notifier = function(areaElement) {
     this.area = areaElement;
     this.clear();
 };
+
 Notifier.Level = {};
 Notifier.Level.Normal = '';
 Notifier.Level.Error = 'error';
@@ -70,8 +71,6 @@ App.prototype = {
     antialias: true,
     fov: 45,
     sceneSize: 100000,
-    
-    // cameraInitialPosition: [-2173, 3130, -3388],
 
     assetsPath: 'assets/',
     
@@ -79,17 +78,15 @@ App.prototype = {
     roomSizeMin: 2000,
     roomSizeStep: 100,
     
-    roomHeightMax: 5000,
-    roomWidthMax: 10000,
-    roomLengthMax: 20000,
+    // roomHeightMax: 5000,
+    // roomWidthMax: 10000,
+    // roomLengthMax: 20000,
     
     sectionsNumMax: 20,
     shelvesNumMax: 20,
-    distanceFromFloorMin: 50,
+    distanceFromFloorMin: 0,
     distanceFromFloorMax: 1000,
     distanceFromFloorStep: 1,
-    distanceFromTopMin: 50,
-    distanceFromTopMax: 500,
     distanceFromTopStep: 1,
     pillarThicknessMin: 5,
     pillarThicknessMax: 100,
@@ -179,16 +176,16 @@ App.prototype = {
     options: {
         viewMode: App.ViewModeEnv,
         room: {
-            height: 50000,
-            length: 30000,
-            width: 8000
+            height: 20000,
+            length: 20000,
+            width: 10000
         },
         floor: {
             color: '#ffffff',
             texture: 'pfleiderer-grau.webp'
         },        
         wall: {
-            color: '#ffffff',
+            color: '#00000',
             texture: 'pfleiderer-weissgrau.webp'
         },
         
@@ -244,11 +241,11 @@ App.prototype = {
         
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, this.sceneSize);
         this.camera.position.set(
-            0, 1000, 2000
+            0, 0, 0
         )
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         
-        var light = new THREE.DirectionalLight(0xffffff, 1);
+        var light = new THREE.DirectionalLight(0xffffff, 2);
         this.camera.add(light);
         this.scene.add(this.camera);
         light.position.set(1000, 0, 0);
@@ -256,13 +253,14 @@ App.prototype = {
         this.light = light;
         
         var controls = new THREE.OrbitControls(this.camera, this.canvas);
-        controls.enablePan = false;
+        controls.enablePan = true;
+        controls.minPolarAngle = 0;
         controls.maxPolarAngle = 85 * Utils.PI_180;
         controls.target.set(0, 1500, 0);
         controls.zoomSpeed = 2.0;
         controls.rotateSpeed = 1.0;
         controls.minDistance = 500;
-        controls.maxDistance = 20000;
+        controls.maxDistance = 50000;
         
         this.controls = controls;
         
@@ -319,6 +317,8 @@ App.prototype = {
         this.run();
         return this;
     },
+
+    
     loadModels: function() {
         var self = this;
         this.models = {};
@@ -341,55 +341,6 @@ App.prototype = {
         }
 
     },
-    // onLoadModel: function(name, object, params) {
-    //     object.name = name;
-    //     object.visible = false;
-    //     object.scale.set(params.scale[0], params.scale[0], params.scale[0]);
-    //     object.position.set(params.offset[0], params.offset[1], params.offset[2]);
-    //     object.rotation.set(params.rotation[0], params.rotation[1], params.rotation[2]);
-        
-    //     // if (name === 'YosemiteFrame' || name === 'ficus') {
-    //     //     object.children.forEach(function(obj) {
-    //     //         obj.material.needsUpdate = true;
-    //     //         obj.material.shininess = 12;
-    //     //     });
-    //     // }
-    //     // if (name === 'simple_sofa') {
-    //     //     object.children.forEach(function(obj) {
-    //     //         obj.geometry.translate(0, 0, 0.25);
-    //     //     });
-    //     // }
-    //     // if (name === 'wall-flat-tv') {
-    //     //     object.children[1].material.needsUpdate = true;
-    //     //     object.children[2].material.needsUpdate = true;
-            
-    //     //     object.children[1].material.color.setRGB(1,1,1);
-    //     //     object.children[1].material.shininess = 0;
-            
-    //     //     object.children[2].material.materials[0].color.setRGB(1, 1, 0);
-    //     //     object.children[2].material.materials[0].emissiveIntensity = 10;
-    //     //     object.children[2].material.materials[0].shininess = 0;
-    //     //     object.children[2].material.materials[0].emissive.setRGB(0.06, 0.06, 0.06);
-            
-    //     //     object.children[2].material.materials[1].color.setRGB(1, 1, 0);
-    //     //     object.children[2].material.materials[1].emissiveIntensity = 10;
-    //     //     object.children[2].material.materials[1].shininess = 0;
-    //     //     object.children[2].material.materials[1].emissive.setRGB(0, 0.5, 1);
-            
-    //     //     var texture = new THREE.VideoTexture(document.getElementById('video'));
-    //     //     texture.minFilter = THREE.LinearFilter;
-    //     //     texture.magFilter = THREE.LinearFilter;
-    //     //     object.children[1].material.map = texture;
-    //     // }
-    //     // if (name === 'sitFemale03') {
-    //     //     object.children[0].material.materials.forEach(function(material) {
-    //     //         material.needsUpdate = true;
-    //     //         material.shininess = 0;
-    //     //     });
-    //     // }                
-    //     // this.models[name] = object;
-    //     // this.scene.add(object);
-    // },
     placeModels: function() {
         var isVisible = (this.options.viewMode == App.ViewModeEnv) && (this.options.room.length >= 3000);
         for (var name in this.models) {
@@ -397,50 +348,6 @@ App.prototype = {
             // var params = this.objectsOptions[name];
             object.visible = isVisible;
             
-            // if (name === 'YosemiteFrame') {
-            //     object.position.z = this.wall.position.z + params.offset[2];
-            //     object.position.y = params.offset[1];
-            //     object.position.x = -this.options.room.length / 2 + params.offset[0];
-            // }
-            // if (name === 'ficus') {
-            //     object.position.z = params.offset[2];
-            //     object.position.x = -this.options.room.length / 2 + params.offset[0];
-            // }            
-            // if (name === 'hangingLight') {
-            //     object.position.y = this.options.room.height + params.offset[1];
-            // }
-            // if (name === 'simple_sofa') {
-            //     object.position.z = this.options.room.width / 2 + params.offset[2];
-            // }
-            // if (name === 'wall-flat-tv') {
-            //     object.position.y = params.offset[1];
-            //     object.position.x = this.options.room.length / 2 + params.offset[2];
-        
-            //     if (isVisible) {
-            //         this.models['wall-flat-tv'].children[1].material.map.image.play();
-            //     } else {
-            //         this.models['wall-flat-tv'].children[1].material.map.image.pause();
-            //         this.models['wall-flat-tv'].children[1].material.map.image.currentTime = 0;
-            //     }
-            // }
-            // if (name === 'livreJava') {
-            //     object.position.y = this.options.distanceFromFloor + this.options.shelf.thickness + params.offset[1];
-            //     object.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2 + params.offset[2];
-            //     if (this.options.sectionsNum % 2) {
-            //         object.position.x = this.options.shelf.length;
-            //     } else {
-            //         object.position.x = this.options.shelf.length / 2;
-            //     }
-            //     if (this.options.sectionsNum === 1) {
-            //         object.position.x = 0;
-            //     }
-            // }
-            
-            // if (name === 'sitFemale03') {
-            //     object.position.x = params.offset[0];
-            //     object.position.y = 0;
-            //     object.position.z = this.options.room.width / 2 + params.offset[2];
-            // }
         }
     },
     loadTextures: function() {
@@ -511,7 +418,8 @@ App.prototype = {
         var params, label;
         for (var i = 0; i < this.textures.length; i++) {
             params = this.textures[i];
-            label = params.name + ' - ' + params.price + this.currency;
+            label = params.name;
+            //  + ' - ' + params.price + this.currency;
             texturesControlParams[label] = i;
         }
         controller = folder.add(this.options.pillar, 'texture', texturesControlParams).name('Pillar Material');
@@ -698,14 +606,14 @@ App.prototype = {
             this.models[name].visible = isModelsVisible;
         }
         
-        if (this.models['wall-flat-tv']) {
-            if (isModelsVisible) {
-                this.models['wall-flat-tv'].children[1].material.map.image.play();
-            } else {
-                this.models['wall-flat-tv'].children[1].material.map.image.pause();
-                this.models['wall-flat-tv'].children[1].material.map.image.currentTime = 0;
-            }
-        }
+        // if (this.models['wall-flat-tv']) {
+        //     if (isModelsVisible) {
+        //         this.models['wall-flat-tv'].children[1].material.map.image.play();
+        //     } else {
+        //         this.models['wall-flat-tv'].children[1].material.map.image.pause();
+        //         this.models['wall-flat-tv'].children[1].material.map.image.currentTime = 0;
+        //     }
+        // }
     },
     showError: function(err) {
         window.alert(err);
@@ -716,6 +624,8 @@ App.prototype = {
         this.axis.visible = false;
         // this.scene.add(axisHelper);
     },
+
+
     run: function() {
         var self = this;
         function render() {
@@ -734,7 +644,11 @@ App.prototype = {
         render();
     },
 
-    updateShelving: function() {
+    //cập nhật kệ
+    updateShelving: function(shelvesHeight) {
+
+        var shelvesHeight = this.options.pillar.height; 
+
         if (this.gui.domElement.hidden) {
             return;
         }
@@ -742,6 +656,10 @@ App.prototype = {
         this.gui.domElement.hidden = true;
         
         this.scene.remove(this.shelving);
+
+        // adjust camera to fit screen
+ 
+        this.camera.position.set(0, 0, shelvesHeight + 500);
         
         this.updatePillarProtoMaterial();
         this.updateShelfProtoMaterial();
@@ -752,12 +670,16 @@ App.prototype = {
         
         // this.calculateOutput();
         this.gui.domElement.hidden = false;
+
+  
     },
     calculateDistanceBetweenShelves: function(shelvesHeight) {
         // check free height
         var freeHeight = shelvesHeight - this.options.shelvesNum * this.options.shelf.thickness;
         return parseInt(freeHeight / (this.options.shelvesNum - 1));
     },
+
+    //tạo kệ
     createShelving: function() {
         var updateGui = false;
         this.shelving = new THREE.Group();
@@ -815,6 +737,8 @@ App.prototype = {
             });
         }
     },
+
+    //tạo khối thanh dọc
     createPillarProto: function() {
         var self = this;
         var geometry = new THREE.BoxGeometry(this.options.pillar.thickness, this.options.pillar.height, this.options.shelf.width);
@@ -833,6 +757,8 @@ App.prototype = {
             this.updatePillarProtoMaterial();
         }
     },
+
+    //cập nhật khối thanh dọc
     updatePillarProtoMaterial: function() {
         this.pillarProto.material.needsUpdate = true;
         var texture = this.pillarProto.material.map;
@@ -841,6 +767,8 @@ App.prototype = {
         texture.repeat.x = this.options.shelf.width / this.boardTextureStep * this.boardTextureRepeatXPerStep;
         texture.repeat.y = this.options.pillar.height / this.boardTextureStep * this.boardTextureRepeatYPerStep;        
     },
+
+    //tạo khối thanh ngang
     createShelfProto: function() {
         var self = this;
         var geometry = new THREE.BoxGeometry(this.options.shelf.length, this.options.shelf.thickness, this.options.shelf.width);
@@ -856,6 +784,8 @@ App.prototype = {
             this.updateShelfProtoMaterial();
         }
     },
+
+    //cập nhật khối thanh ngang
     updateShelfProtoMaterial: function() {
         this.shelfProto.material.needsUpdate = true;
         var texture = this.shelfProto.material.map;
@@ -863,7 +793,9 @@ App.prototype = {
         
         texture.repeat.x = this.options.shelf.length / this.boardTextureStep * this.boardTextureRepeatXPerStep;  
         texture.repeat.y = this.options.shelf.width / this.boardTextureStep * this.boardTextureRepeatYPerStep;
-    },    
+    },
+    
+    //tạo thanh dọc
     createPillar: function(sectionNum) {
         var pillar = this.pillarProto.clone();
         pillar.name = 'pillar_' + sectionNum;
@@ -874,6 +806,8 @@ App.prototype = {
         this.shelving.add(pillar);
         return pillar;
     },
+
+    //tạo thanh ngang
     createShelf: function(sectionNum, shelfNum) {
         var shelf = this.shelfProto.clone();
         shelf.name = 'shelf_' + sectionNum + '_' + shelfNum;
@@ -885,6 +819,8 @@ App.prototype = {
         this.shelving.add(shelf);
         return shelf;
     },
+
+    //tạo sàn
     createFloor: function() {
         var self = this;
         var geometry = new THREE.PlaneGeometry(this.roomSizeMin, this.roomSizeMin);
@@ -910,6 +846,8 @@ App.prototype = {
         this.scene.add(floor);
     },
     
+
+    //tạo tường
     createWall: function() {
         var self = this;
         var geometry = new THREE.PlaneGeometry(this.roomSizeMin, this.roomSizeMin);
