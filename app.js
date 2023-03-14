@@ -180,8 +180,8 @@ App.prototype = {
         viewMode: App.ViewModeEnv,
         room: {
             height: 50000,
-            length: 40000,
-            width: 10000
+            length: 30000,
+            width: 8000
         },
         floor: {
             color: '#ffffff',
@@ -199,15 +199,15 @@ App.prototype = {
         distanceBetweenShelves: 550,
         
         pillar: {
-            thickness: 30,
-            height: 1800,
+            thickness: 40,
+            height: 2500,
             color: '#ffffff',
             texture: 2 // an index in this.textures array
         },
         shelf: {
             length: 700,
-            width: 400,
-            thickness: 30,
+            width: 500,
+            thickness: 40,
             color: '#ffffff',
             texture: 2 // an index in this.textures array
         }
@@ -240,25 +240,25 @@ App.prototype = {
             canvas: this.canvas
         });
         this.engine.setSize(window.innerWidth, window.innerHeight, true);
-        this.engine.setClearColor(0x0000);
+        this.engine.setClearColor(0xffffff);
         
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, this.sceneSize);
         this.camera.position.set(
-            0, 0, 1000
+            0, 1000, 2000
         )
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         
-        var light = new THREE.PointLight(0xffffff, 2);
+        var light = new THREE.DirectionalLight(0xffffff, 1);
         this.camera.add(light);
         this.scene.add(this.camera);
-        light.position.set(0, 1000, 9000);
+        light.position.set(1000, 0, 0);
         light.intensity = 1.2;
         this.light = light;
         
         var controls = new THREE.OrbitControls(this.camera, this.canvas);
         controls.enablePan = false;
         controls.maxPolarAngle = 85 * Utils.PI_180;
-        controls.target.set(0, 0, 10);
+        controls.target.set(0, 1500, 0);
         controls.zoomSpeed = 2.0;
         controls.rotateSpeed = 1.0;
         controls.minDistance = 500;
@@ -314,7 +314,7 @@ App.prototype = {
             self.camera.updateProjectionMatrix();
         });
         
-        this.calculateOutput();
+        // this.calculateOutput();
 
         this.run();
         return this;
@@ -517,13 +517,13 @@ App.prototype = {
         controller = folder.add(this.options.pillar, 'texture', texturesControlParams).name('Pillar Material');
         controller.onChange(function() {
             self.changePillarTexture();
-            self.calculateOutput();
+            // self.calculateOutput();
         }); 
                
         controller = folder.add(this.options.shelf, 'texture', texturesControlParams).name('Shelf Material');
         controller.onChange(function() {
             self.changeShelfTexture();
-            self.calculateOutput();
+            // self.calculateOutput();
         });        
 
         controller = folder.add(this.options, 'shelvesNum', 1, this.shelvesNumMax, 1).name('Shelves');
@@ -575,7 +575,7 @@ App.prototype = {
         controller = folder.add(
             this.options.pillar, 'height', this.pillarHeightMin, 
             this.pillarHeightMax, this.pillarHeightStep
-        ).name('Pillar Height');
+        ).name('Shelf Height');
         controller.onChange(function() {
             self.updateShelving();
         });
@@ -591,7 +591,7 @@ App.prototype = {
         
         controller = folder.add(
             this.options.shelf, 'width', this.shelfWidthMin, this.shelfWidthMax, this.shelfWidthStep
-        ).name('Shelf Width');
+        ).name('Shelf Depth');
         controller.onChange(function() {
             self.updateShelving();
         });
@@ -615,23 +615,23 @@ App.prototype = {
         
         this.gui = gui;
     },
-    calculateOutput: function() {
-        var shelvesTotal = this.options.shelvesNum * this.options.sectionsNum;
-        var oneShelf = (this.options.shelf.length / 10) * (this.options.shelf.width / 10) * (this.options.shelf.thickness / 10);
+    // calculateOutput: function() {
+    //     var shelvesTotal = this.options.shelvesNum * this.options.sectionsNum;
+    //     var oneShelf = (this.options.shelf.length / 10) * (this.options.shelf.width / 10) * (this.options.shelf.thickness / 10);
         
-        var pillarsTotal = this.options.sectionsNum + 1;
-        var onePillar = (this.options.pillar.height / 10) * (this.options.pillar.thickness / 10) * (this.options.shelf.width / 10);
+    //     var pillarsTotal = this.options.sectionsNum + 1;
+    //     var onePillar = (this.options.pillar.height / 10) * (this.options.pillar.thickness / 10) * (this.options.shelf.width / 10);
         
-        this.output.shelvingQuantity = Math.round(oneShelf * shelvesTotal) / 1000000;
-        this.output.pillarsQuantity = Math.round(onePillar * pillarsTotal) / 1000000;
-        this.output.quantity = Math.round(1000000 * (this.output.shelvingQuantity + this.output.pillarsQuantity)) / 1000000;
+    //     this.output.shelvingQuantity = Math.round(oneShelf * shelvesTotal) / 1000000;
+    //     this.output.pillarsQuantity = Math.round(onePillar * pillarsTotal) / 1000000;
+    //     this.output.quantity = Math.round(1000000 * (this.output.shelvingQuantity + this.output.pillarsQuantity)) / 1000000;
         
-        var oneShelfPrice = this.textures[this.options.shelf.texture].price;
-        var onePillarPrice = this.textures[this.options.pillar.texture].price;
-        this.output.shelvingPrice = Math.round(100 * this.output.shelvingQuantity * oneShelfPrice) / 100;
-        this.output.pillarsPrice = Math.round(100 * this.output.pillarsQuantity * onePillarPrice) / 100;
-        this.output.price = Math.round(100 * (this.output.shelvingPrice + this.output.pillarsPrice)) / 100;
-    },
+    //     var oneShelfPrice = this.textures[this.options.shelf.texture].price;
+    //     var onePillarPrice = this.textures[this.options.pillar.texture].price;
+    //     this.output.shelvingPrice = Math.round(100 * this.output.shelvingQuantity * oneShelfPrice) / 100;
+    //     this.output.pillarsPrice = Math.round(100 * this.output.pillarsQuantity * onePillarPrice) / 100;
+    //     this.output.price = Math.round(100 * (this.output.shelvingPrice + this.output.pillarsPrice)) / 100;
+    // },
     setRoomSize: function(width, length, height) {
         var updateGui = false;
         if (height < (this.options.pillar.height + this.roomSizeStep)) {
@@ -750,7 +750,7 @@ App.prototype = {
         // adjust room size to fit new shelving
         this.setRoomSize(this.options.room.width, this.options.room.length, this.options.room.height);
         
-        this.calculateOutput();
+        // this.calculateOutput();
         this.gui.domElement.hidden = false;
     },
     calculateDistanceBetweenShelves: function(shelvesHeight) {
