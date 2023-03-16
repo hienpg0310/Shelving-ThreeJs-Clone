@@ -5,8 +5,8 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    color: white;
-    background: #000;
+    color: #000;
+    background: #fff;
     font-family: 'Lucida Grande', sans-serif;
     font-size: 15px;
 }
@@ -22,11 +22,12 @@ html, body {
     width: 100%;
     height: 100%;
     opacity: 0.8;
-    background: rgb(0, 0, 0);
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 /* customize gui */
 .dg .slider {
     pointer-events: none !important;
@@ -34,7 +35,7 @@ html, body {
     width: 50% !important;
 }
 .dg input[type=text] {
-    width: 50% !important;
+    width: 60% !important;
 }
 .dg .c {
     width: 50% !important;
@@ -43,7 +44,7 @@ html, body {
     width: 50% !important;
 }
 
-#notification {
+/* #notification {
     height: 25px;
     position: absolute;
     bottom: 0px;
@@ -56,11 +57,13 @@ html, body {
     padding: 5px;
     font-size: 15px;
     color: #aaa;
-/*
+
+
     resize: vertical;
-*/
-}
-#notification span {
+
+} */
+
+/* #notification span {
     opacity: 1;
     transition: opacity 1s;
 }
@@ -72,11 +75,11 @@ html, body {
 }
 #notification span:first-child {
     color: #ccffcc;
-}
+} */
 
 /* type=number fields */
 .dg input[type=number] {
-    width: 50% !important;
+    width: 60% !important;
 }
 .dg .c input[type=number] {
     border: 0;
@@ -90,19 +93,36 @@ html, body {
     margin-left: 0;
 }
 .dg .cr.number input[type=number] {
-    color: #2FA1D6;
+    color: #3c3c3c;
 }
 .dg .cr.string input[type=number] {
     color: #1ed36f; 
 }
 .dg .c input[type=number] {
-    background: #303030;
+    background: #ffff;
     outline: none;
 }
 .dg .c input[type=number]:hover {
-    background: #3c3c3c;
+    background: #fff;
 }
 .dg .c input[type=number]:focus {
-    background: #494949;
-    color: #fff;
+    background: #fff;
+    color: #3c3c3c;
+}
+
+.dg .c input[type=text] {
+    background: #fff;
+    outline: none;
+}
+
+.dg .cr.number input[type=text] {
+    color: #3c3c3c;
+}
+
+.dg .c input[type=text]:hover {
+    background: #fff;
+}
+.dg .c input[type=text]:focus {
+    background: #fff;
+    color: #3c3c3c;
 }

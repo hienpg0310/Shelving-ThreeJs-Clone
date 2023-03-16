@@ -301,6 +301,7 @@ App.prototype = {
         
         this.createFloor();
         this.createWall();
+        // this.createbehindPillar();
 
         this.createShelving();
         this.loadTextures();
@@ -312,7 +313,7 @@ App.prototype = {
             self.camera.updateProjectionMatrix();
         });
         
-        // this.calculateOutput();
+        this.calculateOutput();
 
         this.run();
         return this;
@@ -418,44 +419,46 @@ App.prototype = {
         var params, label;
         for (var i = 0; i < this.textures.length; i++) {
             params = this.textures[i];
-            label = params.name;
-            //  + ' - ' + params.price + this.currency;
+            label = params.name + ' - ' + params.price + this.currency;
             texturesControlParams[label] = i;
         }
         controller = folder.add(this.options.pillar, 'texture', texturesControlParams).name('Pillar Material');
         controller.onChange(function() {
             self.changePillarTexture();
-            // self.calculateOutput();
+            self.calculateOutput();
         }); 
                
         controller = folder.add(this.options.shelf, 'texture', texturesControlParams).name('Shelf Material');
         controller.onChange(function() {
             self.changeShelfTexture();
-            // self.calculateOutput();
+            self.calculateOutput();
         });        
 
         controller = folder.add(this.options, 'shelvesNum', 1, this.shelvesNumMax, 1).name('Shelves');
         controller.domElement.querySelector('input').setAttribute('type', 'number');
         controller.onChange(function() {
             self.updateShelving();
+            self.calculateOutput();
         });
         
         controller = folder.add(this.options, 'sectionsNum', 1, this.sectionsNumMax, 1).name('Sections');
         controller.domElement.querySelector('input').setAttribute('type', 'number');
         controller.onChange(function() {
             self.updateShelving();
+            self.calculateOutput();
         });
         
-        controller = folder.add(
-            this.options, 
-            'distanceFromFloor', 
-            this.distanceFromFloorMin, 
-            this.distanceFromFloorMax, 
-            this.distanceFromFloorStep
-        ).name('Distance From Floor');
-        controller.onChange(function() {
-            self.updateShelving();
-        });
+        // controller = folder.add(
+        //     this.options, 
+        //     'distanceFromFloor', 
+        //     this.distanceFromFloorMin, 
+        //     this.distanceFromFloorMax, 
+        //     this.distanceFromFloorStep
+        // ).name('Distance From Floor');
+        // controller.onChange(function() {
+        //     self.updateShelving();
+        //     self.calculateOutput();
+        // });
         
         // controller = folder.add(
         //     this.options, 
@@ -478,6 +481,7 @@ App.prototype = {
         ).name('Pillar Thickness');
         controller.onChange(function() {
             self.updateShelving();
+            self.calculateOutput();
         });
         
         controller = folder.add(
@@ -486,6 +490,7 @@ App.prototype = {
         ).name('Shelf Height');
         controller.onChange(function() {
             self.updateShelving();
+            self.calculateOutput();
         });
         // shelf
         controller = folder.add(
@@ -495,6 +500,7 @@ App.prototype = {
         ).name('Shelf Thickness');
         controller.onChange(function() {
             self.updateShelving();
+            self.calculateOutput();
         });
         
         controller = folder.add(
@@ -502,6 +508,7 @@ App.prototype = {
         ).name('Shelf Depth');
         controller.onChange(function() {
             self.updateShelving();
+            self.calculateOutput();
         });
         
         controller = folder.add(
@@ -509,37 +516,39 @@ App.prototype = {
         ).name('Shelf Length');
         controller.onChange(function() {
             self.updateShelving();
+            self.calculateOutput();
         });
+        folder.open();
         
-        // folder = gui.addFolder('Result (m3, $)');
-        // controller = folder.add(this.output, 'shelvingQuantity').name('Shelving Quantity').listen();
-        // controller = folder.add(this.output, 'pillarsQuantity').name('Pillars Quantity').listen();
-        // controller = folder.add(this.output, 'quantity').name('Total Quantity').listen();
-        // controller = folder.add(this.output, 'shelvingPrice').name('Shelving Price').listen();
-        // controller = folder.add(this.output, 'pillarsPrice').name('Pillars Price').listen();
-        // controller = folder.add(this.output, 'price').name('Total Price').listen();
+        folder = gui.addFolder('Result (m3, $)');
+        controller = folder.add(this.output, 'shelvingQuantity').name('Shelving Quantity').listen();
+        controller = folder.add(this.output, 'pillarsQuantity').name('Pillars Quantity').listen();
+        controller = folder.add(this.output, 'quantity').name('Total Quantity').listen();
+        controller = folder.add(this.output, 'shelvingPrice').name('Shelving Price').listen();
+        controller = folder.add(this.output, 'pillarsPrice').name('Pillars Price').listen();
+        controller = folder.add(this.output, 'price').name('Total Price').listen();
         
         folder.open();
         
         this.gui = gui;
     },
-    // calculateOutput: function() {
-    //     var shelvesTotal = this.options.shelvesNum * this.options.sectionsNum;
-    //     var oneShelf = (this.options.shelf.length / 10) * (this.options.shelf.width / 10) * (this.options.shelf.thickness / 10);
+    calculateOutput: function() {
+        var shelvesTotal = this.options.shelvesNum * this.options.sectionsNum;
+        var oneShelf = (this.options.shelf.length / 10) * (this.options.shelf.width / 10) * (this.options.shelf.thickness / 10);
         
-    //     var pillarsTotal = this.options.sectionsNum + 1;
-    //     var onePillar = (this.options.pillar.height / 10) * (this.options.pillar.thickness / 10) * (this.options.shelf.width / 10);
+        var pillarsTotal = this.options.sectionsNum + 1;
+        var onePillar = (this.options.pillar.height / 10) * (this.options.pillar.thickness / 10) * (this.options.shelf.width / 10);
         
-    //     this.output.shelvingQuantity = Math.round(oneShelf * shelvesTotal) / 1000000;
-    //     this.output.pillarsQuantity = Math.round(onePillar * pillarsTotal) / 1000000;
-    //     this.output.quantity = Math.round(1000000 * (this.output.shelvingQuantity + this.output.pillarsQuantity)) / 1000000;
+        this.output.shelvingQuantity = Math.round(oneShelf * shelvesTotal) / 1000000;
+        this.output.pillarsQuantity = Math.round(onePillar * pillarsTotal) / 1000000;
+        this.output.quantity = Math.round(1000000 * (this.output.shelvingQuantity + this.output.pillarsQuantity)) / 1000000;
         
-    //     var oneShelfPrice = this.textures[this.options.shelf.texture].price;
-    //     var onePillarPrice = this.textures[this.options.pillar.texture].price;
-    //     this.output.shelvingPrice = Math.round(100 * this.output.shelvingQuantity * oneShelfPrice) / 100;
-    //     this.output.pillarsPrice = Math.round(100 * this.output.pillarsQuantity * onePillarPrice) / 100;
-    //     this.output.price = Math.round(100 * (this.output.shelvingPrice + this.output.pillarsPrice)) / 100;
-    // },
+        var oneShelfPrice = this.textures[this.options.shelf.texture].price;
+        var onePillarPrice = this.textures[this.options.pillar.texture].price;
+        this.output.shelvingPrice = Math.round(100 * this.output.shelvingQuantity * oneShelfPrice) / 100;
+        this.output.pillarsPrice = Math.round(100 * this.output.pillarsQuantity * onePillarPrice) / 100;
+        this.output.price = Math.round(100 * (this.output.shelvingPrice + this.output.pillarsPrice)) / 100;
+    },
     setRoomSize: function(width, length, height) {
         var updateGui = false;
         if (height < (this.options.pillar.height + this.roomSizeStep)) {
@@ -559,24 +568,24 @@ App.prototype = {
         this.options.room.height = height;
         
         // update wall
-        // this.wall.scale.x = this.options.room.length / this.roomSizeMin;
-        // this.wall.scale.y = this.options.room.height / this.roomSizeMin;
-        // this.wall.position.y = this.options.room.height / 2;
-        // this.wall.position.z = -this.options.room.width / 2;
-        // this.wall.material.needsUpdate = true;
-        // this.wall.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.wallTextureRepeatXPerStep;
-        // this.wall.material.map.repeat.y = this.options.room.height / this.roomSizeTextureStep * this.wallTextureRepeatYPerStep;
+        this.wall.scale.x = this.options.room.length / this.roomSizeMin;
+        this.wall.scale.y = this.options.room.height / this.roomSizeMin;
+        this.wall.position.y = this.options.room.height / 2;
+        this.wall.position.z = -this.options.room.width / 2;
+        this.wall.material.needsUpdate = true;
+        this.wall.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.wallTextureRepeatXPerStep;
+        this.wall.material.map.repeat.y = this.options.room.height / this.roomSizeTextureStep * this.wallTextureRepeatYPerStep;
         
         // update floor
-        // this.floor.scale.x = this.options.room.length / this.roomSizeMin;
-        // this.floor.scale.y = this.options.room.width / this.roomSizeMin;
-        // this.floor.material.needsUpdate = true;
-        // this.floor.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.floorTextureRepeatXPerStep;
-        // this.floor.material.map.repeat.y = this.options.room.width / this.roomSizeTextureStep * this.floorTextureRepeatYPerStep;
+        this.floor.scale.x = this.options.room.length / this.roomSizeMin;
+        this.floor.scale.y = this.options.room.width / this.roomSizeMin;
+        this.floor.material.needsUpdate = true;
+        this.floor.material.map.repeat.x = this.options.room.length / this.roomSizeTextureStep * this.floorTextureRepeatXPerStep;
+        this.floor.material.map.repeat.y = this.options.room.width / this.roomSizeTextureStep * this.floorTextureRepeatYPerStep;
 
         // update shelving
         if (this.options.viewMode == App.ViewModeEnv) {
-            this.shelving.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2;
+            this.shelving.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2 + 100;
         } else {
             this.shelving.position.z = 0;
         }
@@ -595,7 +604,7 @@ App.prototype = {
         
         if (isViewEnvMode) {
             // this.shelving.position.y = 20;
-            this.shelving.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2;
+            this.shelving.position.z = -this.options.room.width / 2 + this.options.shelf.width / 2 + 100;
         } else {
             this.shelving.position.z = 0;
         }
@@ -663,6 +672,7 @@ App.prototype = {
         
         this.updatePillarProtoMaterial();
         this.updateShelfProtoMaterial();
+        // this.updateBehindPilarProtoMaterial();
         this.createShelving();
         
         // adjust room size to fit new shelving
@@ -679,13 +689,18 @@ App.prototype = {
         return parseInt(freeHeight / (this.options.shelvesNum - 1));
     },
 
+
     //tạo kệ
     createShelving: function() {
         var updateGui = false;
         this.shelving = new THREE.Group();
+       var geometry = new THREE.BoxGeometry(this.options.pillar.height, this.options.shelf.length);
+       var material = new THREE.MeshLambertMaterial({color: this.options.pillar.color});
+       this.behindPilar = new THREE.Mesh(geometry, material);
+        
         
         // check pillar height, must be enough to fit at least one shelf
-        var shelvesHeight = this.options.pillar.height - this.options.distanceFromFloor - this.options.distanceFromTop;
+        var shelvesHeight = this.options.pillar.height;
         if (shelvesHeight <= this.options.shelf.thickness) {
             // adjust pillar height and shelvesNum
             shelvesHeight = this.options.shelf.thickness;
@@ -717,6 +732,7 @@ App.prototype = {
             this.options.distanceBetweenShelves = distanceBetweenShelves;
         }
         
+        // this.createBehindPilarProto();
         this.createShelfProto();
         this.createPillarProto();
         for (var i = 0; i < this.options.sectionsNum; i++) {
@@ -729,7 +745,13 @@ App.prototype = {
         }
         this.shelving.position.x = -this.options.sectionsNum * (this.options.shelf.length + this.options.pillar.thickness) / 2 + 
             (this.options.shelf.length + this.options.pillar.thickness) / 2;
+
+        this.behindPilar.position.x = -this.options.sectionsNum * (this.options.shelf.length + this.options.pillar.thickness) / 2 + 
+        (this.options.shelf.length + this.options.pillar.thickness) / 2;
+        this.behindPilar.position.z = -this.options.room.width / 2 + this.options.shelf.width;
         this.scene.add(this.shelving);
+        this.scene.add(this.behindPilar);
+        
         
         if (updateGui) {
             this.gui.__folders['Shelving'].__controllers.forEach(function(controller) {
@@ -767,6 +789,37 @@ App.prototype = {
         texture.repeat.x = this.options.shelf.width / this.boardTextureStep * this.boardTextureRepeatXPerStep;
         texture.repeat.y = this.options.pillar.height / this.boardTextureStep * this.boardTextureRepeatYPerStep;        
     },
+
+
+    // //tạo khối mặt lưng
+    // createBehindPilarProto: function() {
+    //     var self = this;
+    //     var geometry = new THREE.BoxGeometry(30, this.options.pillar.height, this.options.shelf.width);
+    //     var material = new THREE.MeshLambertMaterial({color: this.options.pillar.color});
+
+    //     var pillarBehindProto = new THREE.Mesh(geometry, material);
+    //     pillarBehindProto.name = 'pillarBehindProto';
+        
+    //     pillarBehindProto.position.z = this.options.pillar.height / 2;
+        
+    //     if (!this.pillarBehindProto) {
+    //         this.pillarBehindProto = pillarBehindProto;
+    //     } else {
+    //         pillarBehindProto.material = this.pillarBehindProto.material.clone();
+    //         this.pillarBehindProto = pillarBehindProto;
+    //         this.updateBehindPilarProtoMaterial();
+    //     }
+    // },
+
+    // //cập nhật khối mặt lưng
+    // updateBehindPilarProtoMaterial: function() {
+    //     this.pillarBehindProto.material.needsUpdate = true;
+    //     var texture = this.pillarBehindProto.material.map;
+    //     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        
+    //     texture.repeat.x = this.options.shelf.width / this.boardTextureStep * this.boardTextureRepeatXPerStep;
+    //     texture.repeat.y = this.options.pillar.height / this.boardTextureStep * this.boardTextureRepeatYPerStep;        
+    // },
 
     //tạo khối thanh ngang
     createShelfProto: function() {
@@ -819,6 +872,19 @@ App.prototype = {
         this.shelving.add(shelf);
         return shelf;
     },
+
+    // //tạo mặt lưng
+    // createBehindPillar: function(sectionNum) {
+    //     var pillarBehind = this.pillarBehindProto.clone();
+    //     pillarBehind.name = 'pillar_' + sectionNum;
+        
+    //     pillarBehind.position.z = sectionNum * (this.options.shelf.length + this.options.pillar.thickness) - 
+    //         this.options.shelf.length / 2 - this.options.pillar.thickness / 2;
+        
+    //     this.shelving.add(pillarBehind);
+    //     return pillarBehind;
+    // },
+
 
     //tạo sàn
     createFloor: function() {
@@ -873,7 +939,34 @@ App.prototype = {
         wall.visible = false;
         this.wall = wall;
         this.scene.add(wall);
-    }
+    },
+
+    // createbehindPillar: function() {
+    //     var self = this;
+    //     var geometry = new THREE.PlaneGeometry(this.options.shelf.length, this.options.pillar.height);
+        
+    //     var material = new THREE.MeshBasicMaterial({color: this.options.shelf.texture});
+
+    //     var wall = new THREE.Mesh(geometry, material);
+
+    //     wall.scale.x = this.options.shelf.length / this.shelfLengthMin;
+    //     wall.scale.y = this.options.pillar.height / this.pillarHeightMin;
+        
+    //     wall.position.y = this.options.pillar.height / 2;
+    //     wall.position.z = -this.options.shelf.length / 2;
+
+    //     // this.textureLoader.load(this.assetsPath + this.options.shelf.texture, function(texture) {
+    //     //     wall.material.needsUpdate = true;
+    //     //     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    //     //     texture.repeat.x = self.options.room.length / self.roomSizeTextureStep * self.wallTextureRepeatXPerStep;
+    //     //     texture.repeat.y = self.options.room.height / self.roomSizeTextureStep * self.wallTextureRepeatYPerStep;
+    //     //     wall.material.map = texture;
+    //     // });
+        
+    //     wall.visible = false;
+    //     this.wall = wall;
+    //     this.scene.add(wall);
+    // }
 };
 
 window.addEventListener('DOMContentLoaded', function() {
