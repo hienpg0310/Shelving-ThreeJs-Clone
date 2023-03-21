@@ -746,11 +746,11 @@ App.prototype = {
         this.shelving.position.x = -this.options.sectionsNum * (this.options.shelf.length + this.options.pillar.thickness) / 2 + 
             (this.options.shelf.length + this.options.pillar.thickness) / 2;
 
-        this.behindPilar.position.x = -this.options.sectionsNum * (this.options.shelf.length + this.options.pillar.thickness) / 2 + 
-        (this.options.shelf.length + this.options.pillar.thickness) / 2;
-        this.behindPilar.position.z = -this.options.room.width / 2 + this.options.shelf.width;
+        // this.behindPilar.position.x = -this.options.sectionsNum * (this.options.shelf.length + this.options.pillar.thickness) / 2 + 
+        // (this.options.shelf.length + this.options.pillar.thickness) / 2;
+        // this.behindPilar.position.z = -this.options.room.width / 2 + this.options.shelf.width;
         this.scene.add(this.shelving);
-        this.scene.add(this.behindPilar);
+        // this.scene.add(this.behindPilar);
         
         
         if (updateGui) {
